@@ -185,13 +185,49 @@
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
     overflow:hidden;
   }
-  .splash-frame .corner{ position:absolute; width:22px; height:22px; border:1px solid var(--gold); }
+  .splash-frame .corner{ position:absolute; width:22px; height:22px; border:1px solid var(--gold); z-index:2; }
   .splash-frame .corner.tl{ top:12px; left:12px; border-right:0; border-bottom:0; }
   .splash-frame .corner.tr{ top:12px; right:12px; border-left:0; border-bottom:0; }
   .splash-frame .corner.bl{ bottom:12px; left:12px; border-right:0; border-top:0; }
   .splash-frame .corner.br{ bottom:12px; right:12px; border-left:0; border-top:0; }
   .splash-frame .sigil-big{ width:120px; height:120px; color:var(--gold); opacity:.9; filter:drop-shadow(0 0 24px rgba(200,170,110,.35)); }
   .splash-frame .ph{ font-family:var(--mono); font-size:.68rem; letter-spacing:.24em; text-transform:uppercase; color:var(--text-mute); }
+  .splash-frame .splash-img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 30%; }
+  .splash-frame::after{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:1;
+    background:radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(5,8,13,.55) 100%);
+  }
+
+  /* ──────────────── IN-CLIENT PREVIEW ──────────────── */
+  .in-client{ margin-top:72px; }
+  .ic-head{ text-align:center; max-width:680px; margin:0 auto 32px; }
+  .ic-head .eyebrow{ justify-content:center; }
+  .ic-head h3{ font-family:var(--display); color:var(--gold-bright); font-size:clamp(1.5rem,3.2vw,2rem); margin:.4em 0 .4em; font-weight:700; }
+  .ic-head p{ color:var(--text-mute); font-size:.96rem; margin:0; }
+  .ic-frame{
+    margin:0; position:relative; padding:10px;
+    background:linear-gradient(165deg, var(--surface-up), var(--surface));
+    border:1px solid var(--hairline-strong);
+  }
+  .ic-frame::before, .ic-frame::after{ content:""; position:absolute; width:18px; height:18px; border:1px solid var(--gold); }
+  .ic-frame::before{ top:-1px; left:-1px; border-right:0; border-bottom:0; }
+  .ic-frame::after{ bottom:-1px; right:-1px; border-left:0; border-top:0; }
+  .ic-frame img{ display:block; width:100%; height:auto; }
+
+  /* ──────────────── VISUAL DEVELOPMENT GALLERY ──────────────── */
+  .gallery{ margin-top:84px; }
+  .gal-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:10px; }
+  .gal-card{
+    margin:0; position:relative;
+    background:linear-gradient(165deg, var(--surface-up), var(--surface));
+    border:1px solid var(--hairline); border-radius:3px; overflow:hidden;
+    transition:transform .4s cubic-bezier(.2,.7,.2,1), border-color .4s, box-shadow .4s;
+  }
+  .gal-card:hover{ transform:translateY(-4px); border-color:var(--hairline-strong); box-shadow:0 18px 40px -22px rgba(0,0,0,.9); }
+  .gal-card img{ display:block; width:100%; aspect-ratio:3/4; object-fit:cover; }
+  .gal-card figcaption{ padding:14px 16px 16px; }
+  .gal-card figcaption b{ display:block; font-family:var(--mono); font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); margin-bottom:4px; }
+  .gal-card figcaption span{ font-size:.88rem; color:var(--text-mute); line-height:1.5; }
   .identity .lede .eyebrow{ margin-bottom:18px; }
   .identity .lede p{ margin:0 0 16px; }
   .identity .lede .pull{ font-family:var(--display); font-size:1.35rem; line-height:1.4; color:var(--gold-bright); font-weight:500; border-left:2px solid var(--gold); padding-left:20px; }
@@ -311,6 +347,7 @@
     .phil-grid{ grid-template-columns:1fr; }
     #about .about-grid{ grid-template-columns:1fr; gap:34px; }
     .equi-row .lab{ width:84px; }
+    .gal-grid{ grid-template-columns:repeat(2,1fr); }
   }
   @media (prefers-reduced-motion:reduce){
     *{ scroll-behavior:auto !important; }
@@ -420,14 +457,9 @@
     <!-- identity -->
     <div class="identity reveal">
       <div class="splash-frame">
+        <img class="splash-img" src="images/sevaran-splash-combat.png" alt="Sevaran, the Arbiter Eternal — combat splash: chains restrain enemies on both sides while a halo of scales burns above his helm">
         <span class="corner tl"></span><span class="corner tr"></span>
         <span class="corner bl"></span><span class="corner br"></span>
-        <svg class="sigil-big" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-          <path d="M32 8v44"/><path d="M16 18h32"/><circle cx="32" cy="13" r="3"/>
-          <path d="M16 18l-7 14h14z"/><path d="M48 18l-7 14h14z"/>
-          <path d="M9 32a7 5 0 0 0 14 0"/><path d="M41 32a7 5 0 0 0 14 0"/><path d="M24 56h16"/>
-        </svg>
-        <span class="ph">Splash art · drop your image here</span>
       </div>
       <div class="lede">
         <span class="eyebrow">Core fantasy</span>
@@ -546,6 +578,44 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- IN-CLIENT PREVIEW -->
+    <div class="in-client reveal">
+      <div class="ic-head">
+        <span class="eyebrow">In-client preview</span>
+        <h3>How he reads in the lobby</h3>
+        <p>Champion select model, base-skin turnaround, and the live ability silhouettes. The signature device — a halo of scales above a hooded helm — has to be readable at 60×60 in champ select and at 720p mid-fight.</p>
+      </div>
+      <figure class="ic-frame">
+        <img src="images/sevaran-in-client.png" alt="In-client preview: champion select model with passive icon and level 18 XP bar, three-quarter turnarounds from every angle, and Q · Judgment Strike, W · Shackles of Justice, E · Righteous Smite, R · Equilibrium ability previews from the game world">
+      </figure>
+    </div>
+
+    <!-- VISUAL DEVELOPMENT -->
+    <div class="gallery reveal">
+      <div class="sec-head" style="margin-bottom:24px">
+        <div><span class="num">Visual development</span><h2 style="font-size:clamp(1.6rem,3.6vw,2.3rem)">From sketch to splash</h2></div>
+        <p class="sec-note">Four passes: a stylized first read, a tonal painterly direction, the radiant hero shot, and the final intervention scene.</p>
+      </div>
+      <div class="gal-grid">
+        <figure class="gal-card">
+          <img src="images/sevaran-concept-sketch.png" alt="Early concept sketch — stylized, illustrative, gold tones">
+          <figcaption><b>01 · Concept sketch</b><span>Stylized first read. Silhouette, sigil, hammer — the things that have to survive being shrunk to an icon.</span></figcaption>
+        </figure>
+        <figure class="gal-card">
+          <img src="images/sevaran-tonal-study.png" alt="Tonal painterly study — dark armor, ember-lit hammer">
+          <figcaption><b>02 · Tonal study</b><span>Painterly direction. Darker armor, brass accents, hammer lit from within like a forge ember.</span></figcaption>
+        </figure>
+        <figure class="gal-card">
+          <img src="images/sevaran-splash-radiant.png" alt="Radiant splash — Sevaran channels light from a halo of scales">
+          <figcaption><b>03 · Radiant splash</b><span>Hero shot: the halo of scales as the scene's light source. The verdict comes before the swing.</span></figcaption>
+        </figure>
+        <figure class="gal-card">
+          <img src="images/sevaran-splash-combat.png" alt="Combat splash — Sevaran restraining enemies on both sides with golden chains">
+          <figcaption><b>04 · Combat splash</b><span>Intervention in motion. The chains pull both sides toward the 50% line — his fantasy in one frame.</span></figcaption>
+        </figure>
       </div>
     </div>
 

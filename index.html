@@ -1,0 +1,661 @@
+<!--
+  CHAMPION CONCEPT PORTFOLIO — personal site template
+  ------------------------------------------------------------------
+  HOW TO MAKE THIS YOURS:
+  1. Brand name: search for  data-edit="brand"  and replace "JULES".
+  2. Add a champion: copy one <article class="roster-card"> block in
+     the Roster section and edit the text + SVG sigil.
+  3. Swap the splash placeholder: replace the .splash-frame contents
+     with your own <img> when your art is ready.
+  4. Contact links live in the footer — search  data-edit="contact".
+  Everything is in this one file. No build step, no dependencies.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Champion Concepts — a design portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Hanken+Grotesk:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    /* palette — Hextech: engraved gold over a blue-black void */
+    --void:        #0A0E15;
+    --void-deep:   #05080D;
+    --surface:     #10151E;
+    --surface-up:  #161D29;
+    --gold:        #C8AA6E;
+    --gold-bright: #F0E6D2;
+    --gold-dim:    #6E5526;
+    --cyan:        #0AC8B9;  /* arcane glow — used sparingly */
+    --text:        #C7C0B2;
+    --text-mute:   #837C6E;
+    --enemy:       #C8455B;  /* "down to 50%" */
+    --ally:        #3FA7E0;  /* "up to 50%"   */
+
+    --hairline: rgba(200,170,110,.18);
+    --hairline-strong: rgba(200,170,110,.34);
+
+    --display: "Cinzel", Georgia, serif;
+    --body: "Hanken Grotesk", system-ui, sans-serif;
+    --mono: "Spline Sans Mono", ui-monospace, monospace;
+
+    --maxw: 1140px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(1100px 700px at 50% -10%, #131c2b 0%, transparent 60%),
+      radial-gradient(900px 600px at 100% 100%, #0d1622 0%, transparent 55%),
+      var(--void);
+    color:var(--text);
+    font-family:var(--body);
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  h1,h2,h3{ margin:0; font-family:var(--display); color:var(--gold-bright); font-weight:700; line-height:1.05; }
+
+  .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+
+  /* shared label / eyebrow */
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:.72rem;
+    letter-spacing:.34em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:inline-flex; align-items:center; gap:.7em;
+  }
+  .eyebrow::before{ content:""; width:26px; height:1px; background:var(--gold-dim); }
+
+  /* ───────────────────────── NAV ───────────────────────── */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:blur(10px);
+    background:linear-gradient(to bottom, rgba(5,8,13,.92), rgba(5,8,13,.55));
+    border-bottom:1px solid var(--hairline);
+  }
+  .nav-inner{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .brand{
+    font-family:var(--display); font-weight:900; letter-spacing:.18em;
+    color:var(--gold-bright); font-size:1.05rem; text-transform:uppercase;
+    display:flex; align-items:center; gap:.65em;
+  }
+  .brand .diamond{ width:9px; height:9px; background:var(--gold); transform:rotate(45deg); box-shadow:0 0 10px rgba(200,170,110,.6); }
+  .nav-links{ display:flex; gap:30px; }
+  .nav-links a{
+    font-family:var(--mono); font-size:.74rem; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--text-mute); transition:color .25s;
+  }
+  .nav-links a:hover{ color:var(--gold-bright); }
+
+  /* ───────────────────────── HERO ───────────────────────── */
+  .hero{ position:relative; padding:120px 0 100px; text-align:center; }
+  /* the 50% centerline motif — Sevaran's whole identity */
+  .hero::before{
+    content:""; position:absolute; top:0; bottom:0; left:50%; width:1px;
+    background:linear-gradient(to bottom, transparent, var(--hairline) 18%, var(--hairline) 82%, transparent);
+  }
+  .hero .eyebrow{ justify-content:center; }
+  .hero h1{
+    font-size:clamp(2.9rem, 8vw, 6rem);
+    font-weight:900; letter-spacing:.02em; margin:.35em 0 .25em;
+  }
+  .hero h1 .alt{ color:var(--gold); }
+  .hero .tag{
+    max-width:620px; margin:0 auto; color:var(--text);
+    font-size:clamp(1rem,2.4vw,1.22rem); line-height:1.55;
+  }
+  .hero .tag b{ color:var(--gold-bright); font-weight:600; }
+  .scroll-cue{
+    margin-top:64px; font-family:var(--mono); font-size:.68rem; letter-spacing:.3em;
+    color:var(--text-mute); text-transform:uppercase;
+  }
+  .scroll-cue .line{ display:block; width:1px; height:42px; margin:14px auto 0; background:linear-gradient(var(--gold), transparent); }
+
+  /* reveal animation */
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in{ opacity:1; transform:none; }
+
+  /* ──────────────────── SECTION SCAFFOLD ──────────────────── */
+  section{ padding:96px 0; position:relative; }
+  .sec-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
+  .sec-head h2{ font-size:clamp(1.9rem,4.5vw,2.9rem); letter-spacing:.01em; }
+  .sec-head .num{ font-family:var(--mono); color:var(--gold-dim); font-size:.8rem; letter-spacing:.25em; }
+  .sec-note{ max-width:430px; color:var(--text-mute); font-size:.96rem; }
+
+  /* ───────────────────────── ROSTER ───────────────────────── */
+  .roster{ display:grid; grid-template-columns:repeat(auto-fill, minmax(258px,1fr)); gap:18px; }
+  .roster-card{
+    position:relative; padding:30px 26px 26px;
+    background:linear-gradient(165deg, var(--surface-up), var(--surface));
+    border:1px solid var(--hairline); border-radius:3px;
+    overflow:hidden; transition:transform .4s cubic-bezier(.2,.7,.2,1), border-color .4s, box-shadow .4s;
+  }
+  .roster-card::after{ /* corner cuts, like client cards */
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      linear-gradient(135deg, var(--gold-dim) 0 1px, transparent 1px) top left/14px 14px no-repeat,
+      linear-gradient(-135deg, var(--gold-dim) 0 1px, transparent 1px) top right/14px 14px no-repeat;
+    opacity:.5;
+  }
+  .roster-card:hover{ transform:translateY(-6px); border-color:var(--hairline-strong); box-shadow:0 18px 40px -22px rgba(0,0,0,.9); }
+  .roster-card .role{ font-family:var(--mono); font-size:.66rem; letter-spacing:.22em; text-transform:uppercase; color:var(--cyan); }
+  .roster-card .sigil{ width:64px; height:64px; margin:18px 0 20px; color:var(--gold); }
+  .roster-card h3{ font-size:1.5rem; }
+  .roster-card .title{ font-family:var(--display); font-style:italic; font-weight:500; color:var(--gold); font-size:.95rem; margin-top:2px; }
+  .roster-card .blurb{ margin-top:14px; font-size:.92rem; color:var(--text-mute); line-height:1.55; }
+  .roster-card .go{ margin-top:20px; font-family:var(--mono); font-size:.68rem; letter-spacing:.2em; text-transform:uppercase; color:var(--gold); display:inline-flex; gap:.6em; align-items:center; }
+  .roster-card .go::after{ content:"→"; transition:transform .3s; }
+  .roster-card:hover .go::after{ transform:translateX(5px); }
+
+  .roster-card.draft{ border-style:dashed; border-color:var(--hairline); background:transparent; }
+  .roster-card.draft:hover{ transform:none; box-shadow:none; }
+  .roster-card.draft .role{ color:var(--text-mute); }
+  .roster-card.draft .sigil{ color:var(--gold-dim); opacity:.6; }
+  .roster-card.draft h3{ color:var(--text-mute); }
+  .roster-card.draft .blurb{ color:var(--text-mute); opacity:.8; }
+
+  /* ──────────────────── FEATURED DOSSIER ──────────────────── */
+  #dossier{ background:linear-gradient(to bottom, transparent, rgba(7,11,18,.6) 12%, rgba(7,11,18,.6) 88%, transparent); }
+  .dossier-head{ text-align:center; margin-bottom:54px; }
+  .dossier-head .eyebrow{ justify-content:center; }
+  .dossier-head h2{ font-size:clamp(2.6rem,7vw,5rem); font-weight:900; margin:.25em 0 .1em; }
+  .dossier-head .epithet{ font-family:var(--display); font-style:italic; font-weight:500; color:var(--gold); font-size:clamp(1.1rem,2.6vw,1.5rem); }
+  .meta-row{ display:flex; justify-content:center; flex-wrap:wrap; gap:0; margin-top:24px; }
+  .meta-row .cell{ padding:0 26px; border-left:1px solid var(--hairline); }
+  .meta-row .cell:first-child{ border-left:0; }
+  .meta-row .k{ font-family:var(--mono); font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:var(--text-mute); }
+  .meta-row .v{ font-family:var(--display); color:var(--gold-bright); font-size:1rem; margin-top:4px; }
+
+  /* identity: splash placeholder + blurb */
+  .identity{ display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; margin-bottom:64px; }
+  .splash-frame{
+    position:relative; aspect-ratio:4/5; border:1px solid var(--hairline-strong);
+    background:
+      radial-gradient(120% 90% at 30% 20%, rgba(200,170,110,.10), transparent 55%),
+      linear-gradient(150deg, #12202c, #0a0f17 70%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px;
+    overflow:hidden;
+  }
+  .splash-frame .corner{ position:absolute; width:22px; height:22px; border:1px solid var(--gold); }
+  .splash-frame .corner.tl{ top:12px; left:12px; border-right:0; border-bottom:0; }
+  .splash-frame .corner.tr{ top:12px; right:12px; border-left:0; border-bottom:0; }
+  .splash-frame .corner.bl{ bottom:12px; left:12px; border-right:0; border-top:0; }
+  .splash-frame .corner.br{ bottom:12px; right:12px; border-left:0; border-top:0; }
+  .splash-frame .sigil-big{ width:120px; height:120px; color:var(--gold); opacity:.9; filter:drop-shadow(0 0 24px rgba(200,170,110,.35)); }
+  .splash-frame .ph{ font-family:var(--mono); font-size:.68rem; letter-spacing:.24em; text-transform:uppercase; color:var(--text-mute); }
+  .identity .lede .eyebrow{ margin-bottom:18px; }
+  .identity .lede p{ margin:0 0 16px; }
+  .identity .lede .pull{ font-family:var(--display); font-size:1.35rem; line-height:1.4; color:var(--gold-bright); font-weight:500; border-left:2px solid var(--gold); padding-left:20px; }
+
+  /* ABILITY BAR — the in-client HUD, the signature device */
+  .ability-block{ margin-top:24px; }
+  .ability-bar{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:34px; }
+  .ab-key{
+    --c:var(--gold);
+    background:none; border:0; cursor:pointer; padding:0; color:inherit;
+    width:96px; text-align:center; font-family:inherit;
+  }
+  .ab-hex{
+    position:relative; width:78px; height:78px; margin:0 auto 10px;
+    display:grid; place-items:center;
+    background:linear-gradient(160deg, var(--surface-up), var(--surface));
+    border:1px solid var(--hairline);
+    clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+    transition:border-color .3s, transform .3s, background .3s;
+  }
+  .ab-key:hover .ab-hex,
+  .ab-key.active .ab-hex{ transform:translateY(-4px); }
+  .ab-key.active .ab-hex{
+    background:linear-gradient(160deg, #1f2838, #131a26);
+    box-shadow:0 0 0 1px var(--c), 0 0 26px -6px var(--c);
+  }
+  .ab-hex svg{ width:40px; height:40px; color:var(--c); transition:color .3s; }
+  .ab-hex .slot{
+    position:absolute; bottom:-2px; right:6px;
+    font-family:var(--mono); font-size:.6rem; font-weight:600; letter-spacing:.05em;
+    color:var(--void); background:var(--gold); padding:1px 5px; border-radius:2px;
+  }
+  .ab-key .nm{ font-family:var(--mono); font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--text-mute); transition:color .3s; }
+  .ab-key.active .nm{ color:var(--gold-bright); }
+
+  /* ability detail panel */
+  .ab-panels{ position:relative; }
+  .ab-panel{ display:none; }
+  .ab-panel.active{ display:block; animation:fade .45s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;} }
+  .ab-detail{
+    display:grid; grid-template-columns:auto 1fr; gap:30px; align-items:start;
+    background:linear-gradient(165deg, var(--surface-up), var(--surface));
+    border:1px solid var(--hairline); border-radius:3px; padding:34px 36px;
+  }
+  .ab-detail .glyph{ width:110px; height:110px; display:grid; place-items:center; border:1px solid var(--hairline); border-radius:3px; }
+  .ab-detail .glyph svg{ width:58px; height:58px; color:var(--gold); }
+  .ab-detail .head{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; }
+  .ab-detail .head h3{ font-size:1.7rem; }
+  .ab-detail .type{ font-family:var(--mono); font-size:.66rem; letter-spacing:.2em; text-transform:uppercase; color:var(--cyan); }
+  .ab-detail .body{ margin:14px 0 0; color:var(--text); }
+  .ab-detail .theme{
+    margin-top:18px; padding-top:16px; border-top:1px dashed var(--hairline);
+    font-size:.92rem; color:var(--text-mute);
+  }
+  .ab-detail .theme b{ color:var(--gold); font-weight:600; }
+
+  /* EQUILIBRIUM visualizer — two bars converging on the 50% line */
+  .equi{ margin:60px auto 0; max-width:760px; }
+  .equi .cap{ text-align:center; font-family:var(--mono); font-size:.7rem; letter-spacing:.24em; text-transform:uppercase; color:var(--text-mute); margin-bottom:26px; }
+  .equi-track{ position:relative; padding:8px 0; }
+  .equi-mid{ position:absolute; left:50%; top:-6px; bottom:-6px; width:1px; background:var(--gold); box-shadow:0 0 12px rgba(200,170,110,.5); }
+  .equi-mid span{ position:absolute; top:-22px; left:50%; transform:translateX(-50%); font-family:var(--mono); font-size:.66rem; letter-spacing:.16em; color:var(--gold); white-space:nowrap; }
+  .equi-row{ display:flex; align-items:center; gap:16px; margin:12px 0; }
+  .equi-row .lab{ width:120px; flex:none; font-family:var(--mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; text-align:right; color:var(--text-mute); }
+  .equi-bar{ position:relative; flex:1; height:16px; background:rgba(255,255,255,.04); border:1px solid var(--hairline); }
+  .equi-fill{ position:absolute; top:0; bottom:0; left:0; transition:width 1.2s cubic-bezier(.3,.8,.2,1); }
+  .equi-row.ally  .lab{ color:var(--ally); }
+  .equi-row.ally  .equi-fill{ background:linear-gradient(90deg, rgba(63,167,224,.25), var(--ally)); }
+  .equi-row.enemy .lab{ color:var(--enemy); }
+  .equi-row.enemy .equi-fill{ background:linear-gradient(90deg, rgba(200,69,91,.25), var(--enemy)); }
+
+  /* DESIGN PHILOSOPHY — three columns */
+  .philosophy{ margin-top:84px; }
+  .phil-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:10px; }
+  .phil-card{ background:linear-gradient(165deg, var(--surface-up), var(--surface)); border:1px solid var(--hairline); border-radius:3px; padding:28px 26px; }
+  .phil-card h3{ font-size:1.15rem; display:flex; align-items:center; gap:10px; }
+  .phil-card h3 .dot{ width:7px; height:7px; transform:rotate(45deg); }
+  .phil-card.str h3 .dot{ background:var(--ally); }
+  .phil-card.weak h3 .dot{ background:var(--enemy); }
+  .phil-card.counter h3 .dot{ background:var(--gold); }
+  .phil-card ul{ margin:18px 0 0; padding:0; list-style:none; }
+  .phil-card li{ position:relative; padding:0 0 12px 18px; font-size:.94rem; color:var(--text); line-height:1.5; }
+  .phil-card li::before{ content:""; position:absolute; left:0; top:.62em; width:6px; height:1px; background:var(--gold-dim); }
+
+  /* ───────────────────────── ABOUT ───────────────────────── */
+  #about .about-grid{ display:grid; grid-template-columns:1fr 1.1fr; gap:54px; align-items:center; }
+  #about p{ margin:0 0 18px; }
+  #about p:last-child{ margin-bottom:0; }
+  #about .lead{ font-family:var(--display); font-size:1.5rem; line-height:1.4; color:var(--gold-bright); font-weight:500; }
+  .principle{ display:flex; gap:16px; padding:16px 0; border-top:1px solid var(--hairline); }
+  .principle:last-child{ border-bottom:1px solid var(--hairline); }
+  .principle .n{ font-family:var(--mono); color:var(--gold); font-size:.78rem; letter-spacing:.1em; padding-top:3px; }
+  .principle .t b{ display:block; color:var(--gold-bright); font-family:var(--display); font-size:1.05rem; margin-bottom:2px; }
+  .principle .t span{ font-size:.92rem; color:var(--text-mute); }
+
+  /* ───────────────────────── FOOTER ───────────────────────── */
+  footer{ border-top:1px solid var(--hairline); padding:64px 0 48px; }
+  .foot-grid{ display:flex; justify-content:space-between; align-items:flex-end; gap:30px; flex-wrap:wrap; }
+  .foot-brand{ font-family:var(--display); font-weight:900; letter-spacing:.16em; text-transform:uppercase; color:var(--gold-bright); font-size:1.4rem; }
+  .foot-tag{ color:var(--text-mute); font-size:.92rem; margin-top:8px; max-width:340px; }
+  .foot-links{ display:flex; gap:24px; }
+  .foot-links a{ font-family:var(--mono); font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--text-mute); transition:color .25s; }
+  .foot-links a:hover{ color:var(--gold-bright); }
+  .legal{ margin-top:40px; font-size:.74rem; color:var(--text-mute); opacity:.7; line-height:1.6; max-width:680px; }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; }
+
+  /* ───────────────────────── RESPONSIVE ───────────────────────── */
+  @media (max-width:860px){
+    .nav-links{ display:none; }
+    .identity{ grid-template-columns:1fr; }
+    .splash-frame{ max-width:360px; margin:0 auto; }
+    .ab-detail{ grid-template-columns:1fr; }
+    .ab-detail .glyph{ margin-bottom:6px; }
+    .phil-grid{ grid-template-columns:1fr; }
+    #about .about-grid{ grid-template-columns:1fr; gap:34px; }
+    .equi-row .lab{ width:84px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{ scroll-behavior:auto !important; }
+    .reveal{ opacity:1 !important; transform:none !important; transition:none; }
+    .equi-fill{ transition:none; }
+  }
+</style>
+
+<!-- ════════════════════ NAV ════════════════════ -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top"><span class="diamond"></span><span data-edit="brand">JULES</span></a>
+    <nav class="nav-links">
+      <a href="#roster">Roster</a>
+      <a href="#dossier">Featured</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow reveal">Champion design · League of Legends</span>
+    <h1 class="reveal">Rules <span class="alt">before</span><br>swords.</h1>
+    <p class="tag reveal">Original champion concepts built around a single question:
+      <b>what new decision does this champion force a fight to make?</b>
+      Kits, counterplay, and visual direction — designed to be read, not just admired.</p>
+    <div class="scroll-cue reveal">Enter the roster<span class="line"></span></div>
+  </div>
+</section>
+
+<!-- ════════════════════ ROSTER ════════════════════ -->
+<section id="roster">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div>
+        <span class="num">01 / Roster</span>
+        <h2>The concept roster</h2>
+      </div>
+      <p class="sec-note">Each champion starts as a fantasy and earns its kit. Below: one finished design, and slots waiting in the forge.</p>
+    </div>
+
+    <div class="roster">
+
+      <!-- ▼▼▼ FINISHED CHAMPION — duplicate this block to add another ▼▼▼ -->
+      <article class="roster-card reveal" tabindex="0" onclick="location.hash='#dossier'" onkeypress="if(event.key==='Enter')location.hash='#dossier'">
+        <span class="role">Bruiser–Controller · Top / Jungle</span>
+        <svg class="sigil" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <!-- scales + gavel sigil -->
+          <path d="M32 8v44"/><path d="M16 18h32"/>
+          <circle cx="32" cy="13" r="3"/>
+          <path d="M16 18l-7 14h14z"/><path d="M48 18l-7 14h14z"/>
+          <path d="M9 32a7 5 0 0 0 14 0"/><path d="M41 32a7 5 0 0 0 14 0"/>
+          <path d="M24 56h16"/>
+        </svg>
+        <h3>Sevaran</h3>
+        <div class="title">the Arbiter Eternal</div>
+        <p class="blurb">He doesn't win fights by damage alone — he rewrites the rules of the fight, then punishes anyone who breaks them.</p>
+        <span class="go">Read the dossier</span>
+      </article>
+      <!-- ▲▲▲ end finished champion ▲▲▲ -->
+
+      <article class="roster-card draft reveal">
+        <span class="role">In the forge</span>
+        <svg class="sigil" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M32 10l18 10v22L32 54 14 42V20z"/><circle cx="32" cy="32" r="6"/>
+        </svg>
+        <h3>Concept 02</h3>
+        <div class="title" style="color:var(--text-mute)">untitled</div>
+        <p class="blurb">Your next fantasy goes here. Name it, give it one job in a teamfight, and build the kit outward.</p>
+      </article>
+
+      <article class="roster-card draft reveal">
+        <span class="role">In the forge</span>
+        <svg class="sigil" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+          <path d="M32 10l18 10v22L32 54 14 42V20z"/><path d="M22 32h20M32 22v20"/>
+        </svg>
+        <h3>Concept 03</h3>
+        <div class="title" style="color:var(--text-mute)">untitled</div>
+        <p class="blurb">Copy a finished card, swap the sigil and copy, and the grid keeps its rhythm automatically.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ DOSSIER ════════════════════ -->
+<section id="dossier">
+  <div class="wrap">
+
+    <div class="dossier-head reveal">
+      <span class="num" style="font-family:var(--mono);color:var(--gold-dim);letter-spacing:.25em;">02 / Featured concept</span>
+      <h2>SEVARAN</h2>
+      <div class="epithet">the Arbiter Eternal</div>
+      <div class="meta-row">
+        <div class="cell"><div class="k">Class</div><div class="v">Bruiser–Controller</div></div>
+        <div class="cell"><div class="k">Position</div><div class="v">Top / Jungle</div></div>
+        <div class="cell"><div class="k">Theme</div><div class="v">Forced balance</div></div>
+        <div class="cell"><div class="k">Threshold</div><div class="v">50%</div></div>
+      </div>
+    </div>
+
+    <!-- identity -->
+    <div class="identity reveal">
+      <div class="splash-frame">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <svg class="sigil-big" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <path d="M32 8v44"/><path d="M16 18h32"/><circle cx="32" cy="13" r="3"/>
+          <path d="M16 18l-7 14h14z"/><path d="M48 18l-7 14h14z"/>
+          <path d="M9 32a7 5 0 0 0 14 0"/><path d="M41 32a7 5 0 0 0 14 0"/><path d="M24 56h16"/>
+        </svg>
+        <span class="ph">Splash art · drop your image here</span>
+      </div>
+      <div class="lede">
+        <span class="eyebrow">Core fantasy</span>
+        <p class="pull">A bruiser who creates forced decisions instead of stat-checking you to death.</p>
+        <p>Sevaran arrives when the scales tip. His kit is built on a single threshold — <b style="color:var(--gold)">50% health</b> — and bends every fight toward it. Punish the strong, preserve the weak, and make both teams play by his terms.</p>
+        <p>Half-order, half-chaos armor. A chained judgment halo. A dual gavel-warhammer, and scales worked into every plate. He is not dashing into the fight. He is <b style="color:var(--gold)">intervening</b>.</p>
+      </div>
+    </div>
+
+    <!-- ABILITY BAR (signature device) -->
+    <div class="ability-block reveal">
+      <div class="ability-bar" role="tablist" aria-label="Sevaran abilities">
+        <button class="ab-key active" data-ab="p" role="tab" aria-selected="true">
+          <span class="ab-hex">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M24 6v30"/><path d="M10 14h28"/><path d="M10 14l-5 11h10z"/><path d="M38 14l-5 11h10z"/><path d="M18 40h12"/></svg>
+            <span class="slot">P</span>
+          </span>
+          <span class="nm">Balance</span>
+        </button>
+        <button class="ab-key" data-ab="q" role="tab" aria-selected="false">
+          <span class="ab-hex">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M28 10l10 10-6 6-10-10z"/><path d="M22 16L8 30l6 6 14-14"/><path d="M8 38h14"/></svg>
+            <span class="slot">Q</span>
+          </span>
+          <span class="nm">Sentence</span>
+        </button>
+        <button class="ab-key" data-ab="w" role="tab" aria-selected="false">
+          <span class="ab-hex">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="16" cy="16" r="7"/><circle cx="32" cy="32" r="7"/><path d="M21 21l6 6"/></svg>
+            <span class="slot">W</span>
+          </span>
+          <span class="nm">Shackles</span>
+        </button>
+        <button class="ab-key" data-ab="e" role="tab" aria-selected="false">
+          <span class="ab-hex">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M24 6v22"/><path d="M16 20l8 8 8-8"/><path d="M12 36c4 4 20 4 24 0"/></svg>
+            <span class="slot">E</span>
+          </span>
+          <span class="nm">Intervention</span>
+        </button>
+        <button class="ab-key" data-ab="r" role="tab" aria-selected="false">
+          <span class="ab-hex">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M24 4v40"/><path d="M14 16l10-8 10 8"/><path d="M14 32l10 8 10-8"/></svg>
+            <span class="slot">R</span>
+          </span>
+          <span class="nm">Equilibrium</span>
+        </button>
+      </div>
+
+      <div class="ab-panels">
+        <!-- P -->
+        <div class="ab-panel active" data-ab="p" role="tabpanel">
+          <div class="ab-detail">
+            <div class="glyph"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M24 6v30"/><path d="M10 14h28"/><path d="M10 14l-5 11h10z"/><path d="M38 14l-5 11h10z"/><path d="M18 40h12"/></svg></div>
+            <div>
+              <div class="head"><h3>Balance Must Be Kept</h3><span class="type">Passive</span></div>
+              <p class="body">Sevaran gains bonus damage or defensive value when fighting a target whose health state is meaningfully different from his own — sharpest around the 50% line. The wider the imbalance, the harder he tips it back.</p>
+              <p class="theme"><b>Identity tie:</b> his entire kit is one idea expressed five ways — punish the high, preserve the low.</p>
+            </div>
+          </div>
+        </div>
+        <!-- Q -->
+        <div class="ab-panel" data-ab="q" role="tabpanel">
+          <div class="ab-detail">
+            <div class="glyph"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M28 10l10 10-6 6-10-10z"/><path d="M22 16L8 30l6 6 14-14"/><path d="M8 38h14"/></svg></div>
+            <div>
+              <div class="head"><h3>Sentence</h3><span class="type">Q · basic</span></div>
+              <p class="body">A short cone hammer swing deals physical damage and marks enemies hit with <em>Sentence</em>. Sevaran's next basic attack consumes the mark for bonus damage and a brief slow. The bonus is higher against targets above 50% HP — and if Sevaran is himself below 50%, consuming the mark heals him.</p>
+              <p class="theme"><b>Why it works:</b> a normal bruiser trade tool that rewards weaving autos, and a miniature of his whole fantasy in one button.</p>
+            </div>
+          </div>
+        </div>
+        <!-- W -->
+        <div class="ab-panel" data-ab="w" role="tabpanel">
+          <div class="ab-detail">
+            <div class="glyph"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="16" cy="16" r="7"/><circle cx="32" cy="32" r="7"/><path d="M21 21l6 6"/></svg></div>
+            <div>
+              <div class="head"><h3>Shackles of Justice</h3><span class="type">W · zone</span></div>
+              <p class="body">Enemies caught in the zone around Sevaran are tethered and silenced while they remain inside it. Leaving the tether breaks it — but breaking it briefly stuns the one who fled. Stay and lose your spells, or run and eat the stun.</p>
+              <p class="theme"><b>Counterplay built in:</b> the decision is the point. Accept the silence, or accept the stun.</p>
+            </div>
+          </div>
+        </div>
+        <!-- E -->
+        <div class="ab-panel" data-ab="e" role="tabpanel">
+          <div class="ab-detail">
+            <div class="glyph"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M24 6v22"/><path d="M16 20l8 8 8-8"/><path d="M12 36c4 4 20 4 24 0"/></svg></div>
+            <div>
+              <div class="head"><h3>Intervention</h3><span class="type">E · targeted leap</span></div>
+              <p class="body">A leap to an ally or enemy champion — usable only at medium range, never point-blank. On an enemy: slam down, deal damage and slow, with bonus damage if they're above 50% HP. On an ally: leap to them and shield both, with a larger shield if the ally is below 50%.</p>
+              <p class="theme"><b>The minimum range matters:</b> he pronounces judgment from a distance and crashes in. It keeps him from being too sticky once he's already on top of you.</p>
+            </div>
+          </div>
+        </div>
+        <!-- R -->
+        <div class="ab-panel" data-ab="r" role="tabpanel">
+          <div class="ab-detail">
+            <div class="glyph"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M24 4v40"/><path d="M14 16l10-8 10 8"/><path d="M14 32l10 8 10-8"/></svg></div>
+            <div>
+              <div class="head"><h3>Equilibrium</h3><span class="type">R · ultimate</span></div>
+              <p class="body">Sevaran enforces balance across the fight: every ally is brought <em>up</em> to 50% health, and every enemy is brought <em>down</em> to 50% health. A great equalizer and a comeback button — and a catastrophe if you mistime it.</p>
+              <div class="equi reveal">
+                <div class="cap">Equilibrium · the fight resolves to the line</div>
+                <div class="equi-track">
+                  <div class="equi-mid"><span>50%</span></div>
+                  <div class="equi-row ally">
+                    <span class="lab">Allies ↑</span>
+                    <div class="equi-bar"><div class="equi-fill" data-start="18" data-end="50"></div></div>
+                  </div>
+                  <div class="equi-row enemy">
+                    <span class="lab">Enemies ↓</span>
+                    <div class="equi-bar"><div class="equi-fill" data-start="92" data-end="50"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESIGN PHILOSOPHY -->
+    <div class="philosophy reveal">
+      <div class="sec-head" style="margin-bottom:24px">
+        <div><span class="num">Design philosophy</span><h2 style="font-size:clamp(1.6rem,3.6vw,2.3rem)">Why he deserves to exist</h2></div>
+      </div>
+      <div class="phil-grid">
+        <div class="phil-card str">
+          <h3><span class="dot"></span>Strengths</h3>
+          <ul>
+            <li>Teamfight disruption and anti-frontline pressure.</li>
+            <li>Manufactures comeback windows from behind.</li>
+            <li>Dangerous into tanks without raw true damage everywhere.</li>
+          </ul>
+        </div>
+        <div class="phil-card weak">
+          <h3><span class="dot"></span>Weaknesses</h3>
+          <ul>
+            <li>Kiteable once his E is spent.</li>
+            <li>Cooldown-reliant; punished while abilities are down.</li>
+            <li>Vulnerable to poke and disengage; a mistimed ult is disastrous.</li>
+          </ul>
+        </div>
+        <div class="phil-card counter">
+          <h3><span class="dot"></span>Counterplay</h3>
+          <ul>
+            <li>Leave the W tether and accept the stun on your terms.</li>
+            <li>Bait the ultimate, then fight after it's gone.</li>
+            <li>Engage when your team is already above 50% and theirs below.</li>
+            <li>Punish the minimum range on his Intervention.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ ABOUT ════════════════════ -->
+<section id="about">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="reveal">
+        <span class="eyebrow">About the work</span>
+        <p class="lead" style="margin-top:18px">I design champions the way Riot evaluates them: fantasy first, then clarity, counterplay, and the levers that keep them balanced.</p>
+      </div>
+      <div class="reveal">
+        <p>These aren't pitches — they're a case study in design thinking. The goal of each concept is to show that I understand not just a cool fantasy, but readability, the decisions a kit forces, and the reasons a champion earns a place on the roster.</p>
+        <div class="principle"><span class="n">01</span><span class="t"><b>Fantasy with a job</b><span>Every concept answers what new decision it forces in a fight.</span></span></div>
+        <div class="principle"><span class="n">02</span><span class="t"><b>Counterplay is the kit</b><span>The interesting choice belongs to both players, not just the one casting.</span></span></div>
+        <div class="principle"><span class="n">03</span><span class="t"><b>Read before flash</b><span>Clear silhouettes and ability tells before any visual spectacle.</span></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand" data-edit="brand">JULES</div>
+        <p class="foot-tag">Champion design, kit balance, and visual direction. Open to feedback and conversation.</p>
+      </div>
+      <nav class="foot-links" data-edit="contact">
+        <a href="#" target="_blank" rel="noopener">ArtStation</a>
+        <a href="#" target="_blank" rel="noopener">X / Twitter</a>
+        <a href="#" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:you@example.com">Email</a>
+      </nav>
+    </div>
+    <p class="legal">A fan-made design portfolio. Not affiliated with, endorsed by, or sponsored by Riot Games. League of Legends and all associated names and marks are trademarks of Riot Games, Inc. All champion concepts shown here are original fan work.</p>
+  </div>
+</footer>
+
+<script>
+  /* ── ability tab switching ── */
+  const keys = document.querySelectorAll('.ab-key');
+  const panels = document.querySelectorAll('.ab-panel');
+  keys.forEach(k=>{
+    k.addEventListener('click', ()=>{
+      const id = k.dataset.ab;
+      keys.forEach(x=>{ x.classList.toggle('active', x===k); x.setAttribute('aria-selected', x===k); });
+      panels.forEach(p=> p.classList.toggle('active', p.dataset.ab===id));
+      if(id==='r') runEquilibrium();
+    });
+  });
+
+  /* ── scroll reveal ── */
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:.12});
+  document.querySelectorAll('.reveal').forEach((el,i)=>{
+    el.style.transitionDelay = Math.min(i*40, 240)+'ms';
+    io.observe(el);
+  });
+
+  /* ── equilibrium bars converge to 50% ── */
+  let equiDone = false;
+  function runEquilibrium(){
+    const fills = document.querySelectorAll('.equi-fill');
+    const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    fills.forEach(f=>{
+      f.style.width = (reduce ? f.dataset.end : f.dataset.start) + '%';
+      if(!reduce){ requestAnimationFrame(()=> setTimeout(()=> f.style.width = f.dataset.end+'%', 120)); }
+    });
+    equiDone = true;
+  }
+  /* initialize bars at their start positions so the R panel looks right on first open */
+  document.querySelectorAll('.equi-fill').forEach(f=> f.style.width = f.dataset.start+'%');
+</script>
